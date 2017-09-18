@@ -53,7 +53,7 @@ class Flake8(PythonLinter):
         '--ignore=,': '',
         '--builtins=,': '',
         '--max-line-length=': None,
-        '--max-complexity=': -1,
+        '--max-complexity=': None,
         '--jobs=': '1',
         'show-code': False,
         'executable': ''
