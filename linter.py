@@ -12,16 +12,14 @@
 """This module exports the Flake8 plugin linter class."""
 
 from SublimeLinter.lint import PythonLinter
+from SublimeLinter.lint import util
 
 
 class Flake8(PythonLinter):
     """Provides an interface to the flake8 python module/script."""
 
     syntax = ('python', 'python3')
-    cmd = ('flake8', '*', '-')
-    version_args = '--version'
-    version_re = r'^(?P<version>\d+\.\d+\.\d+)'
-    version_requirement = '>= 2.2.2'
+    cmd = None
 
     # The following regex marks these pyflakes and pep8 codes as errors.
     # All other codes are marked as warnings.
@@ -88,11 +86,5 @@ class Flake8(PythonLinter):
 
     def build_cmd(self, cmd=None):
         """Return a tuple with the command line to execute."""
-
-        executable = self.get_view_settings().get('executable', None)
-        if executable:
-            args = (cmd or self.cmd)[1:]
-            cmd = (executable, ) + args
-            return self.insert_args(cmd)
-        else:
-            return super().build_cmd(cmd)
+        python_executable, *_ = util.find_python(self.get_view_settings().get('@python', None))
+        return (python_executable, '-m', 'flake8', '*', '-')
